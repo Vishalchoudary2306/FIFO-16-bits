@@ -1,0 +1,88 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 03.07.2024 05:08:39
+// Design Name: 
+// Module Name: FIFO_16_TB
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+
+module FIFO_TB_16();
+
+    // Inputs and Outputs
+    reg clk;
+    reg rst;
+    reg wr_en;
+    reg rd_en;
+    reg [15:0] buf_in;
+    
+    // Outputs
+    wire [15:0] buf_out;
+    wire buf_empty;
+    wire buf_full;
+    wire [6:0] fifo_counter;
+
+    // Instantiate the FIFO_16 module
+    FIFO_16 dut (
+        .clk(clk),
+        .rst(rst),
+        .wr_en(wr_en),
+        .rd_en(rd_en),
+        .buf_in(buf_in),
+        .buf_out(buf_out),
+        .buf_empty(buf_empty),
+        .buf_full(buf_full),
+        .fifo_counter(fifo_counter)
+    );
+
+    // Clock generation
+    always begin
+        clk = 0;
+        #5;
+        clk = 1;
+        #5;
+    end
+
+    // Initial reset
+    initial begin
+        rst = 1;
+        wr_en = 0;
+        rd_en = 0;
+        buf_in = 16'h0000;
+        #10;
+        rst = 0;
+    end
+
+    // Stimulus
+    initial begin
+        // Write operations
+        wr_en = 1;
+        buf_in = 16'hAAAA;
+        #20;
+        buf_in = 16'hBBBB;
+        #20;
+        wr_en = 0;
+
+        // Read operations
+        rd_en = 1;
+        #30;
+        rd_en = 0;
+        #10;
+        
+   
+        #100;
+        $finish;
+    end
+  
+endmodule
